@@ -314,7 +314,7 @@ export default async function Home() {
         {portfolioProjects.map((project) => (
           <div key={project._id} className="flex flex-col gap-[10px]">
             <div className="relative w-full h-[390px] overflow-hidden">
-              <img src={project.imageUrl ?? ""} alt="" className="absolute inset-0 w-full h-full object-cover" />
+              {project.imageUrl && <img src={project.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />}
               <div className="absolute bottom-4 left-4 flex gap-3">
                 {(project.tags ?? []).map((tag) => (
                   <div key={tag} className="backdrop-blur-[10px] bg-[rgba(255,255,255,0.3)] px-2 py-1 rounded-3xl">
@@ -361,7 +361,7 @@ export default async function Home() {
           {portfolioProjects.slice(0, 2).map((project) => (
             <div key={project._id} className="flex flex-col gap-[10px]">
               <div className={`relative w-full overflow-hidden ${project.tallDesktop ? "h-[744px]" : "h-[699px]"}`}>
-                <img src={project.imageUrl ?? ""} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                {project.imageUrl && <img src={project.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />}
                 <div className="absolute bottom-4 left-4 flex gap-3">
                   {(project.tags ?? []).map((tag) => (
                     <div key={tag} className="backdrop-blur-[10px] bg-[rgba(255,255,255,0.3)] px-2 py-1 rounded-3xl">
@@ -401,7 +401,7 @@ export default async function Home() {
           {portfolioProjects.slice(2, 4).map((project) => (
             <div key={project._id} className="flex flex-col gap-[10px]">
               <div className={`relative w-full overflow-hidden ${project.tallDesktop ? "h-[744px]" : "h-[699px]"}`}>
-                <img src={project.imageUrl ?? ""} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                {project.imageUrl && <img src={project.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />}
                 <div className="absolute bottom-4 left-4 flex gap-3">
                   {(project.tags ?? []).map((tag) => (
                     <div key={tag} className="backdrop-blur-[10px] bg-[rgba(255,255,255,0.3)] px-2 py-1 rounded-3xl">
@@ -490,7 +490,7 @@ export default async function Home() {
           {newsItems.map((item) => (
             <div key={item._id} className="shrink-0 w-[300px] flex flex-col gap-4">
               <div className="relative w-full h-[398px] overflow-hidden">
-                <img src={item.imageUrl ?? ""} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                {item.imageUrl && <img src={item.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />}
               </div>
               <p className="font-[family-name:var(--font-inter)] font-normal text-[14px] text-[#1f1f1f] leading-[1.3] tracking-[-0.04em]">
                 {item.summary}
@@ -525,7 +525,7 @@ export default async function Home() {
               )}
               <div className={`flex-1 flex flex-col gap-4 ${i === 1 ? "pt-[120px]" : ""}`}>
                 <div className="relative w-full h-[469px] overflow-hidden">
-                  <img src={item.imageUrl ?? ""} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                  {item.imageUrl && <img src={item.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />}
                 </div>
                 <p className="font-[family-name:var(--font-inter)] font-normal text-[14px] text-[#1f1f1f] leading-[1.3] tracking-[-0.04em]">
                   {item.summary}
