@@ -15,9 +15,9 @@ export default function MobileMenu() {
         aria-label="Open menu"
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <rect y="4" width="24" height="2" rx="1" fill="black" />
-          <rect y="11" width="24" height="2" rx="1" fill="black" />
-          <rect y="18" width="24" height="2" rx="1" fill="black" />
+          <rect y="4" width="24" height="2" rx="1" fill="currentColor" />
+          <rect y="11" width="24" height="2" rx="1" fill="currentColor" />
+          <rect y="18" width="24" height="2" rx="1" fill="currentColor" />
         </svg>
       </button>
 
