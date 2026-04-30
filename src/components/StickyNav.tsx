@@ -1,31 +1,46 @@
 "use client";
 
 import { useRef, useLayoutEffect } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MobileMenu from "@/components/MobileMenu";
 
 gsap.registerPlugin(ScrollTrigger);
 
+interface NavLink {
+  label: string;
+  href: string;
+}
+
 interface StickyNavProps {
   studioName: string;
-  navLinks: string[];
+  navLinks: NavLink[];
 }
 
 export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
   const navRef = useRef<HTMLElement>(null);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      // Nav link underline hover
-      linkRefs.current.forEach((link) => {
+      // Nav link underline hover + active state
+      linkRefs.current.forEach((link, i) => {
         if (!link) return;
         const underline = link.querySelector<HTMLSpanElement>("[data-underline]");
         if (!underline) return;
+
+        const isActive = pathname === navLinks[i]?.href;
+        if (isActive) {
+          gsap.set(underline, { scaleX: 1, transformOrigin: "left" });
+          return;
+        }
+
         link.addEventListener("mouseenter", () =>
           gsap.to(underline, { scaleX: 1, transformOrigin: "left", duration: 0.25, ease: "power2.out" })
         );
@@ -49,10 +64,7 @@ export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
       const nav = navRef.current;
       if (!nav) return;
 
-      ["#section-services", "#section-footer"].forEach((selector) => {
-        const section = document.querySelector(selector);
-        if (!section) return;
-
+      document.querySelectorAll<HTMLElement>("[data-nav-dark]").forEach((section) => {
         ScrollTrigger.create({
           trigger: section,
           start: "top 72px",
@@ -78,7 +90,7 @@ export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [pathname, navLinks]);
 
   return (
     <nav
@@ -93,24 +105,24 @@ export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
         {studioName}
       </span>
 
-      <MobileMenu />
+      <MobileMenu navLinks={navLinks} />
 
       <div className="hidden md:flex items-center gap-14 font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize">
         {navLinks.map((link, i) => (
-          <a
-            key={link}
-            href="#"
+          <Link
+            key={link.href}
+            href={link.href}
             ref={(el) => { linkRefs.current[i] = el; }}
             className="relative pb-0.5"
             style={{ color: "inherit" }}
           >
-            {link}
+            {link.label}
             <span
               data-underline
               className="absolute bottom-0 left-0 right-0 h-px bg-current block"
               style={{ transform: "scaleX(0)" }}
             />
-          </a>
+          </Link>
         ))}
       </div>
 

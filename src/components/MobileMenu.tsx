@@ -1,10 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
-const navLinks = ["About", "Services", "Projects", "News", "Contact"];
+interface NavLink {
+  label: string;
+  href: string;
+}
 
-export default function MobileMenu() {
+interface MobileMenuProps {
+  navLinks: NavLink[];
+}
+
+export default function MobileMenu({ navLinks }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -38,14 +46,14 @@ export default function MobileMenu() {
         </div>
         <nav className="flex flex-col gap-8 mt-16">
           {navLinks.map((link) => (
-            <a
-              key={link}
-              href="#"
+            <Link
+              key={link.href}
+              href={link.href}
               onClick={() => setOpen(false)}
               className="font-[family-name:var(--font-inter)] font-semibold text-[32px] tracking-[-0.04em] text-black capitalize leading-none hover:opacity-50 transition-opacity"
             >
-              {link}
-            </a>
+              {link.label}
+            </Link>
           ))}
         </nav>
         <div className="mt-auto">
