@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import StickyNav from "@/components/StickyNav";
 import HeroSection from "@/components/HeroSection";
 import { sanityFetch } from "@/sanity/client";
 import {
@@ -66,8 +65,6 @@ const TESTIMONIAL_POSITIONS = [
   { rotate: "-4.15deg", left: "68.5%", top: "546px" },
 ];
 
-const navLinks = ["About", "Services", "Projects", "News", "Contact"];
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function Home() {
@@ -108,7 +105,6 @@ export default async function Home() {
 
   return (
     <>
-    <StickyNav studioName={studioName} navLinks={navLinks} />
     <HeroSection
       heroImageUrl={heroImageUrl}
       heroName={heroName}
@@ -234,7 +230,7 @@ export default async function Home() {
     </section>
 
     {/* Services section */}
-    <section id="section-services" className="bg-black px-4 py-12 flex flex-col gap-8 md:px-8 md:py-[80px] md:gap-12">
+    <section id="section-services" data-nav-dark className="bg-black px-4 py-12 flex flex-col gap-8 md:px-8 md:py-[80px] md:gap-12">
       <span className="font-[family-name:var(--font-geist-mono)] text-[14px] text-white uppercase leading-[1.1] whitespace-nowrap">
         [ services ]
       </span>
@@ -549,7 +545,7 @@ export default async function Home() {
     </section>
 
     {/* Footer */}
-    <footer id="section-footer" className="bg-black px-4 pt-12 flex flex-col gap-12 md:px-8 md:pt-[48px] md:gap-[120px]">
+    <footer id="section-footer" data-nav-dark className="bg-black px-4 pt-12 flex flex-col gap-12 md:px-8 md:pt-[48px] md:gap-[120px]">
       <div className="flex flex-col gap-6 md:gap-[48px]">
         <div className="flex flex-col gap-4 md:hidden">
           <div className="flex flex-col gap-3">
