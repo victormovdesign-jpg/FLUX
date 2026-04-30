@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import MobileMenu from "@/components/MobileMenu";
+import HeroSection from "@/components/HeroSection";
 import { sanityFetch } from "@/sanity/client";
 import {
   heroQuery,
@@ -65,8 +65,6 @@ const TESTIMONIAL_POSITIONS = [
   { rotate: "-4.15deg", left: "68.5%", top: "546px" },
 ];
 
-const navLinks = ["About", "Services", "Projects", "News", "Contact"];
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function Home() {
@@ -107,81 +105,11 @@ export default async function Home() {
 
   return (
     <>
-    <section className="relative flex min-h-screen flex-col overflow-hidden bg-[#c3cdd2] px-4 md:px-8">
-
-      <div className="absolute inset-0 pointer-events-none md:left-[-34.79%] md:right-[-34.79%]">
-        <img
-          alt=""
-          src={heroImageUrl}
-          className="absolute inset-0 w-full h-full object-cover object-top"
-        />
-      </div>
-
-      <div
-        className="absolute inset-x-0 bottom-0 h-[349px] pointer-events-none backdrop-blur-[10px] bg-[rgba(217,217,217,0.01)]"
-        style={{
-          maskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 40%)',
-        }}
-      />
-
-      {/* Navigation */}
-      <nav className="relative z-10 shrink-0 flex items-center justify-between py-6">
-        <span className="font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] text-black capitalize">
-          {studioName}
-        </span>
-
-        <MobileMenu />
-
-        <div className="hidden md:flex items-center gap-14 font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] text-black capitalize">
-          {navLinks.map((link) => (
-            <a key={link} href="#" className="hover:opacity-70 transition-opacity">
-              {link}
-            </a>
-          ))}
-        </div>
-
-        <button className="hidden md:flex bg-black text-white font-[family-name:var(--font-inter)] font-medium text-sm tracking-[-0.04em] px-4 py-3 rounded-3xl cursor-pointer hover:bg-zinc-800 transition-colors">
-          Let&apos;s talk
-        </button>
-      </nav>
-
-      <div className="relative flex-1 flex flex-col justify-end pb-6 md:justify-center md:pb-0">
-        <div className="relative flex flex-col w-full">
-          <p className="font-[family-name:var(--font-geist-mono)] font-normal text-[14px] text-white uppercase mix-blend-overlay leading-[1.1] whitespace-nowrap self-center md:absolute md:top-0 md:left-[18px] md:self-auto">
-            [ Hello i&apos;m ]
-          </p>
-          <p
-            className="font-[family-name:var(--font-inter)] font-medium text-white text-center capitalize mix-blend-overlay w-full whitespace-pre-wrap leading-[0.8] tracking-[-0.07em] md:leading-[1.1]"
-            style={{ fontSize: "clamp(96px, 13.75vw, 198px)" }}
-          >
-            {heroName}
-          </p>
-        </div>
-
-        <div className="mt-6 flex justify-center md:absolute md:bottom-16 md:right-0 md:mt-0 md:justify-end">
-          <div className="flex flex-col gap-[17px] items-start w-[294px]">
-            {heroDescription ? (
-              <p className="font-[family-name:var(--font-inter)] font-bold italic text-[#1f1f1f] text-[14px] tracking-[-0.04em] uppercase leading-[1.1]">
-                {heroDescription}
-              </p>
-            ) : (
-              <p className="font-[family-name:var(--font-inter)] font-bold italic text-[#1f1f1f] text-[14px] tracking-[-0.04em] uppercase leading-[1.1]">
-                <span>H.Studio is a </span>
-                <span className="font-normal">full-service</span>
-                <span>{` creative studio creating beautiful digital experiences and products. We are an `}</span>
-                <span className="font-normal">award winning</span>
-                <span>{` design and art group specializing in branding, web design and engineering.`}</span>
-              </p>
-            )}
-            <button className="bg-black text-white font-[family-name:var(--font-inter)] font-medium text-sm tracking-[-0.04em] px-4 py-3 rounded-3xl cursor-pointer hover:bg-zinc-800 transition-colors">
-              Let&apos;s talk
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </section>
+    <HeroSection
+      heroImageUrl={heroImageUrl}
+      heroName={heroName}
+      heroDescription={heroDescription}
+    />
 
     {/* Bio / staircase section */}
     <section className="bg-white px-4 py-12 md:px-8 md:py-[120px]">
@@ -302,7 +230,7 @@ export default async function Home() {
     </section>
 
     {/* Services section */}
-    <section className="bg-black px-4 py-12 flex flex-col gap-8 md:px-8 md:py-[80px] md:gap-12">
+    <section id="section-services" data-nav-dark className="bg-black px-4 py-12 flex flex-col gap-8 md:px-8 md:py-[80px] md:gap-12">
       <span className="font-[family-name:var(--font-geist-mono)] text-[14px] text-white uppercase leading-[1.1] whitespace-nowrap">
         [ services ]
       </span>
@@ -617,7 +545,7 @@ export default async function Home() {
     </section>
 
     {/* Footer */}
-    <footer className="bg-black px-4 pt-12 flex flex-col gap-12 md:px-8 md:pt-[48px] md:gap-[120px]">
+    <footer id="section-footer" data-nav-dark className="bg-black px-4 pt-12 flex flex-col gap-12 md:px-8 md:pt-[48px] md:gap-[120px]">
       <div className="flex flex-col gap-6 md:gap-[48px]">
         <div className="flex flex-col gap-4 md:hidden">
           <div className="flex flex-col gap-3">

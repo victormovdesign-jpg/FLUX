@@ -6,5 +6,10 @@ import { service } from './service'
 import { portfolioProject } from './portfolioProject'
 import { testimonial } from './testimonial'
 import { newsItem } from './newsItem'
+import { aboutPage } from './aboutPage'
+import { servicesPage } from './servicesPage'
+import { projectsPage } from './projectsPage'
+import { newsPage } from './newsPage'
+import { contactPage } from './contactPage'
 
-export const schemas = [hero, bio, about, settings, service, portfolioProject, testimonial, newsItem]
+export const schemas = [hero, bio, about, settings, service, portfolioProject, testimonial, newsItem, aboutPage, servicesPage, projectsPage, newsPage, contactPage]
