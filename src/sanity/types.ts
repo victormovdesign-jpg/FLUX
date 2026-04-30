@@ -34,9 +34,12 @@ export interface SanityService {
 export interface SanityPortfolioProject {
   _id: string
   name?: string | null
+  client?: string | null
+  year?: number | null
   tags?: string[] | null
   imageUrl?: string | null
   tallDesktop?: boolean | null
+  description?: string | null
 }
 
 export interface SanityTestimonial {
@@ -49,6 +52,45 @@ export interface SanityTestimonial {
 
 export interface SanityNewsItem {
   _id: string
+  title?: string | null
+  date?: string | null
   imageUrl?: string | null
   summary?: string | null
+  externalUrl?: string | null
+}
+
+export interface SanityContactSocialLink {
+  platform?: string | null
+  url?: string | null
+}
+
+export interface SanityAboutPage {
+  headline?: string | null
+  intro?: string | null
+  disciplines?: string[] | null
+}
+
+export interface SanityServicesPage {
+  headline?: string | null
+  intro?: string | null
+}
+
+export interface SanityProjectsPage {
+  headline?: string | null
+  intro?: string | null
+}
+
+export interface SanityNewsPage {
+  headline?: string | null
+  intro?: string | null
+}
+
+export interface SanityContactPage {
+  headline?: string | null
+  intro?: string | null
+  email?: string | null
+  phone?: string | null
+  address?: string | null
+  formActionUrl?: string | null
+  socialLinks?: SanityContactSocialLink[] | null
 }

@@ -30,9 +30,12 @@ export const servicesQuery = `*[_type == "service"] | order(order asc){
 export const portfolioProjectsQuery = `*[_type == "portfolioProject"] | order(order asc){
   _id,
   name,
+  client,
+  year,
   tags,
   "imageUrl": image.asset->url,
-  tallDesktop
+  tallDesktop,
+  description
 }`
 
 export const testimonialsQuery = `*[_type == "testimonial"] | order(order asc){
@@ -45,6 +48,22 @@ export const testimonialsQuery = `*[_type == "testimonial"] | order(order asc){
 
 export const newsItemsQuery = `*[_type == "newsItem"] | order(order asc){
   _id,
+  title,
+  date,
   "imageUrl": image.asset->url,
-  summary
+  summary,
+  externalUrl
+}`
+
+export const aboutPageQuery = `*[_type == "aboutPage"][0]{ headline, intro, disciplines }`
+
+export const servicesPageQuery = `*[_type == "servicesPage"][0]{ headline, intro }`
+
+export const projectsPageQuery = `*[_type == "projectsPage"][0]{ headline, intro }`
+
+export const newsPageQuery = `*[_type == "newsPage"][0]{ headline, intro }`
+
+export const contactPageQuery = `*[_type == "contactPage"][0]{
+  headline, intro, email, phone, address, formActionUrl,
+  socialLinks[]{ platform, url }
 }`
