@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "gsap/react";
 import MobileMenu from "@/components/MobileMenu";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -18,64 +17,68 @@ export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Nav link underline hover
-    linkRefs.current.forEach((link) => {
-      if (!link) return;
-      const underline = link.querySelector<HTMLSpanElement>("[data-underline]");
-      if (!underline) return;
-      link.addEventListener("mouseenter", () =>
-        gsap.to(underline, { scaleX: 1, transformOrigin: "left", duration: 0.25, ease: "power2.out" })
-      );
-      link.addEventListener("mouseleave", () =>
-        gsap.to(underline, { scaleX: 0, transformOrigin: "right", duration: 0.2, ease: "power2.in" })
-      );
-    });
+      // Nav link underline hover
+      linkRefs.current.forEach((link) => {
+        if (!link) return;
+        const underline = link.querySelector<HTMLSpanElement>("[data-underline]");
+        if (!underline) return;
+        link.addEventListener("mouseenter", () =>
+          gsap.to(underline, { scaleX: 1, transformOrigin: "left", duration: 0.25, ease: "power2.out" })
+        );
+        link.addEventListener("mouseleave", () =>
+          gsap.to(underline, { scaleX: 0, transformOrigin: "right", duration: 0.2, ease: "power2.in" })
+        );
+      });
 
-    // Button hover
-    const btn = buttonRef.current;
-    if (btn) {
-      btn.addEventListener("mouseenter", () =>
-        gsap.to(btn, { scale: 1.04, duration: 0.2, ease: "power2.out" })
-      );
-      btn.addEventListener("mouseleave", () =>
-        gsap.to(btn, { scale: 1, duration: 0.15, ease: "power2.in" })
-      );
-    }
+      // Button hover
+      const btn = buttonRef.current;
+      if (btn) {
+        btn.addEventListener("mouseenter", () =>
+          gsap.to(btn, { scale: 1.04, duration: 0.2, ease: "power2.out" })
+        );
+        btn.addEventListener("mouseleave", () =>
+          gsap.to(btn, { scale: 1, duration: 0.15, ease: "power2.in" })
+        );
+      }
 
-    // Scroll-driven color switching
-    const nav = navRef.current;
-    if (!nav) return;
+      // Scroll-driven color switching
+      const nav = navRef.current;
+      if (!nav) return;
 
-    ["#section-services", "#section-footer"].forEach((selector) => {
-      const section = document.querySelector(selector);
-      if (!section) return;
+      ["#section-services", "#section-footer"].forEach((selector) => {
+        const section = document.querySelector(selector);
+        if (!section) return;
 
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 72px",
-        end: "bottom 72px",
-        onEnter: () => {
-          gsap.to(nav, { color: "#fff", duration: 0.3 });
-          if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 });
-        },
-        onLeave: () => {
-          gsap.to(nav, { color: "#000", duration: 0.3 });
-          if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 });
-        },
-        onEnterBack: () => {
-          gsap.to(nav, { color: "#fff", duration: 0.3 });
-          if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 });
-        },
-        onLeaveBack: () => {
-          gsap.to(nav, { color: "#000", duration: 0.3 });
-          if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 });
-        },
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top 72px",
+          end: "bottom 72px",
+          onEnter: () => {
+            gsap.to(nav, { color: "#fff", duration: 0.3 });
+            if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 });
+          },
+          onLeave: () => {
+            gsap.to(nav, { color: "#000", duration: 0.3 });
+            if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 });
+          },
+          onEnterBack: () => {
+            gsap.to(nav, { color: "#fff", duration: 0.3 });
+            if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 });
+          },
+          onLeaveBack: () => {
+            gsap.to(nav, { color: "#000", duration: 0.3 });
+            if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 });
+          },
+        });
       });
     });
-  });
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <nav

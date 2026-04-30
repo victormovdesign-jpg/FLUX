@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,22 +18,26 @@ export default function HeroSection({ heroImageUrl, heroName, heroDescription }:
   const nameRef = useRef<HTMLParagraphElement>(null);
   const descRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
 
-    tl.to(tagRef.current, { y: -80 }, 0)
-      .to(nameRef.current, { scale: 0.92, opacity: 0 }, 0)
-      .to(descRef.current, { y: 40 }, 0);
-  }, { scope: sectionRef });
+      tl.to(tagRef.current, { y: -80 }, 0)
+        .to(nameRef.current, { scale: 0.92, opacity: 0 }, 0)
+        .to(descRef.current, { y: 40 }, 0);
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
