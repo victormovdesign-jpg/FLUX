@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import StickyNav from "@/components/StickyNav";
@@ -33,6 +33,11 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "H.Studio",
   description: "H.Studio — creative design studio",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 const NAV_LINKS = [
