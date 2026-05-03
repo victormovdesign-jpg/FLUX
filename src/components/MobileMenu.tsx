@@ -22,13 +22,16 @@ export default function MobileMenu({ open, onClose, navLinks }: MobileMenuProps)
         transition: "transform 0.3s ease-in-out",
         pointerEvents: open ? "auto" : "none",
       }}
-      aria-hidden={!open}
     >
       <div className="flex items-center justify-between">
         <span className="font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] text-black capitalize">
           H.Studio
         </span>
-        <button onClick={onClose} aria-label="Close menu" className="p-1 cursor-pointer">
+        <button
+          onClick={onClose}
+          aria-label="Close menu"
+          className="p-1 cursor-pointer"
+        >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <line x1="5" y1="5" x2="19" y2="19" stroke="black" strokeWidth="2" strokeLinecap="round" />
             <line x1="19" y1="5" x2="5" y2="19" stroke="black" strokeWidth="2" strokeLinecap="round" />

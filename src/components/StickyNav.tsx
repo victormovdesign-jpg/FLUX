@@ -1,13 +1,9 @@
 "use client";
 
-import { useRef, useLayoutEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MobileMenu from "@/components/MobileMenu";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface NavLink {
   label: string;
@@ -20,117 +16,81 @@ interface StickyNavProps {
 }
 
 export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
-  const navRef = useRef<HTMLElement>(null);
-  const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navDark, setNavDark] = useState(false);
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      // Nav link underline hover + active state
-      linkRefs.current.forEach((link, i) => {
-        if (!link) return;
-        const underline = link.querySelector<HTMLSpanElement>("[data-underline]");
-        if (!underline) return;
-
-        const isActive = pathname === navLinks[i]?.href;
-        if (isActive) {
-          gsap.set(underline, { scaleX: 1, transformOrigin: "left" });
-          return;
-        }
-
-        link.addEventListener("mouseenter", () =>
-          gsap.to(underline, { scaleX: 1, transformOrigin: "left", duration: 0.25, ease: "power2.out" })
-        );
-        link.addEventListener("mouseleave", () =>
-          gsap.to(underline, { scaleX: 0, transformOrigin: "right", duration: 0.2, ease: "power2.in" })
-        );
+  useEffect(() => {
+    const check = () => {
+      const sections = document.querySelectorAll<HTMLElement>("[data-nav-dark]");
+      let dark = false;
+      sections.forEach((s) => {
+        const { top, bottom } = s.getBoundingClientRect();
+        if (top <= 72 && bottom >= 0) dark = true;
       });
+      setNavDark(dark);
+    };
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
 
-      // Button hover
-      const btn = buttonRef.current;
-      if (btn) {
-        btn.addEventListener("mouseenter", () =>
-          gsap.to(btn, { scale: 1.04, duration: 0.2, ease: "power2.out" })
-        );
-        btn.addEventListener("mouseleave", () =>
-          gsap.to(btn, { scale: 1, duration: 0.15, ease: "power2.in" })
-        );
-      }
-
-      // Scroll-driven color switching
-      const nav = navRef.current;
-      if (!nav) return;
-
-      document.querySelectorAll<HTMLElement>("[data-nav-dark]").forEach((section) => {
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top 72px",
-          end: "bottom 72px",
-          onEnter:     () => { gsap.to(nav, { color: "#fff", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 }); },
-          onLeave:     () => { gsap.to(nav, { color: "#000", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 }); },
-          onEnterBack: () => { gsap.to(nav, { color: "#fff", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 }); },
-          onLeaveBack: () => { gsap.to(nav, { color: "#000", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 }); },
-        });
-      });
-    });
-
-    return () => ctx.revert();
-  }, [pathname, navLinks]);
+  const fg = navDark ? "#fff" : "#000";
+  const btnBg = navDark ? "#fff" : "#000";
+  const btnFg = navDark ? "#000" : "#fff";
 
   return (
     <>
       <nav
-        ref={navRef}
         className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-6 px-4 md:px-8"
-        style={{ color: "#000" }}
+        style={{ color: fg, transition: "color 0.3s" }}
       >
         {/* Logo */}
-        <span
-          className="font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize"
-          style={{ color: "inherit" }}
-        >
+        <span className="font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize">
           {studioName}
         </span>
 
-        {/* Desktop links — hidden below md via inline style to avoid v4 cascade issues */}
+        {/* Desktop links — visibility controlled by CSS custom property in globals.css */}
         <div
           className="items-center gap-14 font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize"
           style={{ display: "var(--nav-desktop-display, none)" }}
         >
-          {navLinks.map((link, i) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              ref={(el) => { linkRefs.current[i] = el; }}
-              className="relative pb-0.5"
-              style={{ color: "inherit" }}
-            >
-              {link.label}
-              <span
-                data-underline
-                className="absolute bottom-0 left-0 right-0 h-px bg-current block"
-                style={{ transform: "scaleX(0)" }}
-              />
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="group relative pb-0.5"
+                style={{ color: "inherit" }}
+              >
+                {link.label}
+                <span
+                  className={`absolute bottom-0 left-0 right-0 h-px bg-current block origin-left transition-transform duration-[250ms] ease-out ${
+                    isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </div>
 
         {/* Desktop CTA */}
         <button
-          ref={buttonRef}
-          className="font-[family-name:var(--font-inter)] font-medium text-sm tracking-[-0.04em] px-4 py-3 rounded-3xl cursor-pointer"
-          style={{ backgroundColor: "#000", color: "#fff", transformOrigin: "center", display: "var(--nav-desktop-display, none)" }}
+          className="font-[family-name:var(--font-inter)] font-medium text-sm tracking-[-0.04em] px-4 py-3 rounded-3xl cursor-pointer hover:scale-[1.04]"
+          style={{
+            backgroundColor: btnBg,
+            color: btnFg,
+            transition: "background-color 0.3s, color 0.3s, transform 0.2s",
+            display: "var(--nav-desktop-display, none)",
+          }}
         >
           Let&apos;s talk
         </button>
 
         {/* Mobile hamburger */}
         <button
-          className="font-[family-name:var(--font-inter)] cursor-pointer"
+          className="cursor-pointer"
           style={{ display: "var(--nav-mobile-display, block)", color: "inherit" }}
           onClick={() => setMenuOpen(true)}
           aria-label="Open menu"
