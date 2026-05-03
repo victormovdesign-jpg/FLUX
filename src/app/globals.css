@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Nav visibility tokens — used by StickyNav to avoid Tailwind v4 cascade issues */
+:root {
+  --nav-desktop-display: none;
+  --nav-mobile-display: block;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --nav-desktop-display: flex;
+    --nav-mobile-display: none;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

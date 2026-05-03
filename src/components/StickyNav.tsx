@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import gsap from "gsap";
@@ -24,6 +24,7 @@ export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -69,22 +70,10 @@ export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
           trigger: section,
           start: "top 72px",
           end: "bottom 72px",
-          onEnter: () => {
-            gsap.to(nav, { color: "#fff", duration: 0.3 });
-            if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 });
-          },
-          onLeave: () => {
-            gsap.to(nav, { color: "#000", duration: 0.3 });
-            if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 });
-          },
-          onEnterBack: () => {
-            gsap.to(nav, { color: "#fff", duration: 0.3 });
-            if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 });
-          },
-          onLeaveBack: () => {
-            gsap.to(nav, { color: "#000", duration: 0.3 });
-            if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 });
-          },
+          onEnter:     () => { gsap.to(nav, { color: "#fff", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 }); },
+          onLeave:     () => { gsap.to(nav, { color: "#000", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 }); },
+          onEnterBack: () => { gsap.to(nav, { color: "#fff", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#fff", color: "#000", duration: 0.3 }); },
+          onLeaveBack: () => { gsap.to(nav, { color: "#000", duration: 0.3 }); if (btn) gsap.to(btn, { backgroundColor: "#000", color: "#fff", duration: 0.3 }); },
         });
       });
     });
@@ -93,46 +82,68 @@ export default function StickyNav({ studioName, navLinks }: StickyNavProps) {
   }, [pathname, navLinks]);
 
   return (
-    <nav
-      ref={navRef}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-6 px-4 md:px-8"
-      style={{ color: "#000" }}
-    >
-      <span
-        className="font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize"
-        style={{ color: "inherit" }}
+    <>
+      <nav
+        ref={navRef}
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between py-6 px-4 md:px-8"
+        style={{ color: "#000" }}
       >
-        {studioName}
-      </span>
+        {/* Logo */}
+        <span
+          className="font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize"
+          style={{ color: "inherit" }}
+        >
+          {studioName}
+        </span>
 
-      <MobileMenu navLinks={navLinks} />
+        {/* Desktop links — hidden below md via inline style to avoid v4 cascade issues */}
+        <div
+          className="items-center gap-14 font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize"
+          style={{ display: "var(--nav-desktop-display, none)" }}
+        >
+          {navLinks.map((link, i) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              ref={(el) => { linkRefs.current[i] = el; }}
+              className="relative pb-0.5"
+              style={{ color: "inherit" }}
+            >
+              {link.label}
+              <span
+                data-underline
+                className="absolute bottom-0 left-0 right-0 h-px bg-current block"
+                style={{ transform: "scaleX(0)" }}
+              />
+            </Link>
+          ))}
+        </div>
 
-      <div className="hidden md:flex items-center gap-14 font-[family-name:var(--font-inter)] font-semibold text-base tracking-[-0.04em] capitalize">
-        {navLinks.map((link, i) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            ref={(el) => { linkRefs.current[i] = el; }}
-            className="relative pb-0.5"
-            style={{ color: "inherit" }}
-          >
-            {link.label}
-            <span
-              data-underline
-              className="absolute bottom-0 left-0 right-0 h-px bg-current block"
-              style={{ transform: "scaleX(0)" }}
-            />
-          </Link>
-        ))}
-      </div>
+        {/* Desktop CTA */}
+        <button
+          ref={buttonRef}
+          className="font-[family-name:var(--font-inter)] font-medium text-sm tracking-[-0.04em] px-4 py-3 rounded-3xl cursor-pointer"
+          style={{ backgroundColor: "#000", color: "#fff", transformOrigin: "center", display: "var(--nav-desktop-display, none)" }}
+        >
+          Let&apos;s talk
+        </button>
 
-      <button
-        ref={buttonRef}
-        className="hidden md:flex font-[family-name:var(--font-inter)] font-medium text-sm tracking-[-0.04em] px-4 py-3 rounded-3xl cursor-pointer"
-        style={{ backgroundColor: "#000", color: "#fff", transformOrigin: "center" }}
-      >
-        Let&apos;s talk
-      </button>
-    </nav>
+        {/* Mobile hamburger */}
+        <button
+          className="font-[family-name:var(--font-inter)] cursor-pointer"
+          style={{ display: "var(--nav-mobile-display, block)", color: "inherit" }}
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect y="4" width="24" height="2" rx="1" fill="currentColor" />
+            <rect y="11" width="24" height="2" rx="1" fill="currentColor" />
+            <rect y="18" width="24" height="2" rx="1" fill="currentColor" />
+          </svg>
+        </button>
+      </nav>
+
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} navLinks={navLinks} />
+    </>
   );
 }
